@@ -17,6 +17,8 @@
                 <th>End Date</th>
                 <th></th>
                 <th></th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -34,6 +36,8 @@
                         <td><button id="edit{{code.id }}" type="button" onclick="editPermissionCode({{ code.id }})" class="btn btn-outline-primary">Edit</button></td>
                         <td><button id="delete{{code.id }}" type="button" onclick="deletePermissionCode({{ code.id }})" class="btn btn-outline-danger">Delete</button></td>
                     {% else %}
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                     {% endif %}
