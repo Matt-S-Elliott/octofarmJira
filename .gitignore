@@ -146,3 +146,8 @@ printTesting.py
 
 *.pdf
 python3
+config.yml
+DEV_config.yml
+Invoices/
+history.yml
+keys.yml
