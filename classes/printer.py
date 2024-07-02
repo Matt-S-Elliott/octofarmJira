@@ -103,13 +103,12 @@ class Printer(db.Entity):
                     # won't work for google drive
                     content = file.read()
                     i = content.find("M0 D o n e ?")
-                    if response['progress'] and response['progress']['filepos'] and response['progress']['filepos'] >= i - 2:
+                    if response['progress']['filepos'] and response['progress']['filepos'] >= i - 2:
                         print("Found possibly complete PR: " + response['job']['file']['name'])
-                        for job in self.print_jobs.order_by(lambda j: j.job_name):
-                            # print(job.job_name + " " + response['job']['file']['name'][slice(0, 8)])
-                            if (not job.print_status == str(PrintStatus.NEEDS_CLEAR_REPORTED)) job.job_name and job.job_name == response['job']['file']['name'][slice(0, 8)]:
+                        for job in self.jobs:
+                            if job.job_name and job.job_name + ".gcode" == response['job']['file']['name']:
                                 print("Marking " + job.job_name + " as needing clear")
-                                job.print_status = str(PrintStatus.NEEDS_CLEAR)
+                                job.print_status = PrintStatus.NEEDS_CLEAR
 
             # temporary
             # if flag_bot:
