@@ -6,6 +6,9 @@
 
 {% block content %}
     <a href="/permissionCodes/createPermissionCode">Add New Permission Code</a>
+    <br>
+    <button class="btn btn-primary" onclick="generateAllInvoices()">Generate All Invoices</button>
+    <br>
     <table class="table">
         <thead>
             <tr>
@@ -70,6 +73,14 @@
         anchor.href = "/permissionCodes/getInvoice/" + code_id
         document.body.appendChild(anchor);
         anchor.click();
+    }
+
+    var generateAllInvoices = function() {
+        if (confirm("Are you sure you want to generate all invoices?")) {
+            $.get("/permissionCodes/getAllInvoices", (data) => {
+                alert("Invoices can be found in the invoices folder inside the folder with today's date. (Probably here: C:\Users\UtahA\Documents\GitHub\advanced_octofarmJira\Invoices")
+            })
+        }
     }
     </script>
 {% endblock %}
