@@ -4,6 +4,7 @@ from reportlab.lib.pagesizes import letter
 import jira
 from classes.class_imports import *
 from datetime import date, timedelta
+import os
 
 from reportlab.platypus import SimpleDocTemplate, Spacer, Table, TableStyle
 from reportlab.lib.units import inch
@@ -156,7 +157,9 @@ def mark_jobs_invoiced(print_jobs):
 def generate_invoice(permission_code_id):
     print_jobs = PrintJob.Get_Jobs_For_Permission_Code_Not_Invoiced(permission_code_id)
     permission_code = PermissionCode.Get_By_Id(permission_code_id)
-    doc_name = "Invoices/" + permission_code.name + "_" + str(date.today()) + "_" + "Invoice.pdf"
+    if not os.path.exists("Invoices/" + str(date.today())):
+        os.makedirs("Invoices/" + str(date.today()))
+    doc_name = "Invoices/" + str(date.today()) + "/" + permission_code.name + "_" + str(date.today()) + "_" + "Invoice.pdf"
     doc = SimpleDocTemplate(doc_name, pagesize=letter)
     doc.To = permission_code.contact_info
     doc.Code_Id = permission_code_id
