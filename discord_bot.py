@@ -2,7 +2,6 @@ import discord
 import logging
 from classes.permissionCode import *
 from classes.gcodeCheckItem import *
-from discord.ext import tasks
 
 set_sql_debug(False)  # Shows the SQL queries pony is running in the console.
 db.bind(provider='sqlite', filename='octofarmJira_database.sqlite', create_db=True)  # Establish DB connection.
@@ -25,15 +24,6 @@ async def hello(ctx: discord.ApplicationContext):
     printingJobs = PrintJob.Get_All_By_Status(PrintStatus.PRINTING)
     response = "Printing: " + str(len(printingJobs)) + " Queued: " + str(len(queuedJobs))
     await ctx.respond(response)
-    
-@tasks.loop(seconds=120)
-async def check_finished():
-    with open('botnotifier.json') as file:
-        current = json.loads(file.read)
-        if len(current) > 0:
-            channel = bot.get_channel(1253468611310387342)
-            for fin in current:
-                await channel.send(fin + " may be complete!")
 
 
 bot.load_extension("cogs.printFinishedCog")

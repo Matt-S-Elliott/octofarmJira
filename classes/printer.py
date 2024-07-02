@@ -94,7 +94,6 @@ class Printer(db.Entity):
                 #     return 'needs_clearing', response['job']['filament']['tool0']['volume']
                 # else:
                 #     return 'needs_clearing'
-            flag_bot = False
 
             # Very slow but speed isnt a priority here, will hold for other reasons
             with open("./jiradownloads/" + response['job']['file']['path']) as file:
@@ -102,15 +101,7 @@ class Printer(db.Entity):
                 content = file.read()
                 i = content.find("M0 D o n e ?")
                 if response['progress']['filepos'] >= i - 10:
-                    print("Found possibly complete PR: " + response['job']['file']['name'])
-                    flag_bot = True
-
-            # temporary
-            if flag_bot:
-                with open('botnotifier.json', 'wr') as file:
-                    current = json.loads(file.read())
-                    current.append(response['job']['file']['name'])
-                    file.write(json.dumps(current))
+                    print("Found possibly complete PR: " + job.Get_Name())
 
             if get_actual_volume:
                 return state, 0
