@@ -19,7 +19,6 @@ async def on_ready():
     channel = bot.get_channel(1253468611310387342)
     await channel.send("Bot is running!")
 
-
 @bot.slash_command(name="queueinfo", description="Basic info about the print queue.")
 async def hello(ctx: discord.ApplicationContext):
     queuedJobs = PrintJob.Get_All_By_Status(PrintStatus.IN_QUEUE)
@@ -29,23 +28,13 @@ async def hello(ctx: discord.ApplicationContext):
     
 @tasks.loop(seconds=120)
 async def check_finished():
-    with open('botnotifier.json', 'r') as file:
-        current = []
-        try:
-            current = json.loads(file.read())
-            print(current)
-        except Exception as e:
-            print(e)
-    with open('botnotifier.json', 'w+') as file:
-
+    with open('botnotifier.json') as file:
+        current = json.loads(file.read)
         if len(current) > 0:
-            guild = await bot.fetch_guild(771458872379834468)
-            channel = await guild.fetch_channel(1253468611310387342)
+            channel = bot.get_channel(1253468611310387342)
             for fin in current:
-                await channel.send(str(fin) + " may be complete!")
-        file.write(json.dumps([]))
+                await channel.send(fin + " may be complete!")
 
 
 bot.load_extension("cogs.printFinishedCog")
-check_finished.start()
 bot.run('')

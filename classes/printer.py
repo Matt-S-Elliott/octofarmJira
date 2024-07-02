@@ -2,7 +2,6 @@ from pony.orm import *
 from classes.enumDefinitions import *
 import requests
 import json
-import os.path
 import time
 
 db = Database()
@@ -98,25 +97,18 @@ class Printer(db.Entity):
             flag_bot = False
 
             # Very slow but speed isnt a priority here, will hold for other reasons
-            if response['job']['file']['path'] and os.path.isfile("./jiradownloads/" + response['job']['file']['path']):
-                with open("./jiradownloads/" + response['job']['file']['path']) as file:
-                    # won't work for google drive
-                    content = file.read()
-                    i = content.find("M0 D o n e ?")
-                    if response['progress']['filepos'] and response['progress']['filepos'] >= i - 10:
-                        print("Found possibly complete PR: " + response['job']['file']['name'])
-                        flag_bot = True
+            with open("./jiradownloads/" + response['job']['file']['path']) as file:
+                # won't work for google drive
+                content = file.read()
+                i = content.find("M0 D o n e ?")
+                if response['progress']['filepos'] >= i - 10:
+                    print("Found possibly complete PR: " + response['job']['file']['name'])
+                    flag_bot = True
 
             # temporary
             if flag_bot:
-                current = []
-                with open('botnotifier.json') as file:
-                    try:
-                        current = json.loads(file.read())
-                        print(current)
-                    except Exception as e:
-                        print(e)
-                with open('botnotifier.json', 'w+') as file:
+                with open('botnotifier.json', 'wr') as file:
+                    current = json.loads(file.read())
                     current.append(response['job']['file']['name'])
                     file.write(json.dumps(current))
 
@@ -125,7 +117,6 @@ class Printer(db.Entity):
             else:
                 return state
         except Exception as e:
-            print(e)
             print(self.name + " did not respond. Check connection and disable printer if needed.")
             if get_actual_volume:
                 return 'offline', 0
