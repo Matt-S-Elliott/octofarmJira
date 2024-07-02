@@ -81,26 +81,16 @@ class Printer(db.Entity):
             response = self.Get_Job()
             response = json.loads(response.text)
             state = response['state'].lower()
-            # This only runs if prints were not sent through queue
             if state == 'operational' and response['progress']['completion'] == 100.0:
                 if get_actual_volume:
                     return 'finished', response['job']['filament']['tool0']['volume']  # Also return actual volume printed if job is finished.
                 else:
                     return 'finished'
-
-            # This will never run; paused status is likely only sent by pausing through octoprint
-            # elif state == 'paused' and response['progress']['completion'] == 100.0:
-                # if get_actual_volume:
-                #     return 'needs_clearing', response['job']['filament']['tool0']['volume']
-                # else:
-                #     return 'needs_clearing'
-
-            # Very slow but speed isnt a priority here, will hold for other reasons
-            with open(job.Get_File_Name()) as file:
-                content = file.read()
-                i = content.find("M0 D o n e ?")
-                if response['progress']['filepos'] >= i - 10:
-                    System.out.println("Found possibly complete PR: " + job.Get_Name())
+            elif state == 'paused' and response['progress']['completion'] == 100.0:
+                if get_actual_volume:
+                    return 'needs_clearing', response['job']['filament']['tool0']['volume']
+                else:
+                    return 'needs_clearing'
 
             if get_actual_volume:
                 return state, 0
