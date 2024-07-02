@@ -105,23 +105,20 @@ class Printer(db.Entity):
                     i = content.find("M0 D o n e ?")
                     if response['progress']['filepos'] and response['progress']['filepos'] >= i - 2:
                         print("Found possibly complete PR: " + response['job']['file']['name'])
-                        for job in self.jobs:
-                            if job.job_name and job.job_name + ".gcode" == response['job']['file']['name']:
-                                print("Marking " + job.job_name + " as needing clear")
-                                job.print_status = PrintStatus.NEEDS_CLEAR
+                        flag_bot = True
 
             # temporary
-            # if flag_bot:
-            #     current = []
-            #     with open('botnotifier.json') as file:
-            #         try:
-            #             current = json.loads(file.read())
-            #             print(current)
-            #         except Exception as e:
-            #             print(e)
-            #     with open('botnotifier.json', 'w') as file:
-            #         current.append(response['job']['file']['name'])
-            #         file.write(json.dumps(current))
+            if flag_bot:
+                current = []
+                with open('botnotifier.json') as file:
+                    try:
+                        current = json.loads(file.read())
+                        print(current)
+                    except Exception as e:
+                        print(e)
+                with open('botnotifier.json', 'w') as file:
+                    current.append(response['job']['file']['name'])
+                    file.write(json.dumps(current))
 
             if get_actual_volume:
                 return state, 0
