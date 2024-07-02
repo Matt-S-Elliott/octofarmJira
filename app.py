@@ -448,6 +448,13 @@ def get_invoice_for_permission_code(code_id):
     filename = invoice_generator.generate_invoice(code_id)
     return flask.send_from_directory("", filename, as_attachment=True)
 
+@app.route('/permissionCodes/getAllInvoices', methods=['GET'])
+def get_all_invoices():
+    all_codes = PermissionCode.Get_All()
+    for code in all_codes:
+        filename = invoice_generator.generate_invoice(code.id)
+
+    return "All invoiced!"
 
 @app.route('/messages')
 def messages():
