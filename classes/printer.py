@@ -96,12 +96,11 @@ class Printer(db.Entity):
                 #     return 'needs_clearing'
 
             # Very slow but speed isnt a priority here, will hold for other reasons
-            with open("./jiradownloads/" + response['job']['file']['path']) as file:
-                # won't work for google drive
+            with open(job.Get_File_Name()) as file:
                 content = file.read()
                 i = content.find("M0 D o n e ?")
                 if response['progress']['filepos'] >= i - 10:
-                    print("Found possibly complete PR: " + job.Get_Name())
+                    System.out.println("Found possibly complete PR: " + job.Get_Name())
 
             if get_actual_volume:
                 return state, 0
