@@ -79,8 +79,8 @@ class Printer(db.Entity):
     def Get_Printer_State(self, get_actual_volume=False):
         """Returns a tuple with the state as the first element. The second element is the actual weight used if the"""
         try:
-            job = self.Get_Job()
-            response = json.loads(job.text)
+            response = self.Get_Job()
+            response = json.loads(response.text)
             state = response['state'].lower()
             # This only runs if prints were not sent through queue
             if state == 'operational' and response['progress']['completion'] == 100.0:
@@ -103,7 +103,7 @@ class Printer(db.Entity):
                     # won't work for google drive
                     content = file.read()
                     i = content.find("M0 D o n e ?")
-                    if response['progress']['filepos'] and response['progress']['filepos'] >= i - 2:
+                    if response['progress']['filepos'] and response['progress']['filepos'] >= i - 10:
                         print("Found possibly complete PR: " + response['job']['file']['name'])
                         flag_bot = True
 
@@ -116,7 +116,7 @@ class Printer(db.Entity):
                         print(current)
                     except Exception as e:
                         print(e)
-                with open('botnotifier.json', 'w') as file:
+                with open('botnotifier.json', 'w+') as file:
                     current.append(response['job']['file']['name'])
                     file.write(json.dumps(current))
 

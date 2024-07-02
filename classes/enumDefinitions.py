@@ -72,8 +72,6 @@ class PrintStatus(Enum):
     """Job cancelled for some reason."""
     FAILED = auto()
     """Print failed and was not completed."""
-    NEEDS_CLEAR = auto()
-    """Print completed and needs clearing."""
 
 
 class PaymentStatus(Enum):
