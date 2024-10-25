@@ -170,7 +170,7 @@ class PrintJob(db.Entity):
         text += "Print harvested at: " + finishTime + "\n"
         text += "Actual filament used: " + str(self.weight) + "g\n"
         text += "Actual print cost: " + "${:,.2f}".format(self.cost) + "\n"
-        text += "Print completed on: " + printed_on.name + "\n\n"
+        text += "Print completed on: " + self.printed_on.name + "\n\n"
 
         if self.permission_code:
             message = Message.get(name=MessageNames.FINISH_TEXT_TAX_EXEMPT.name)
