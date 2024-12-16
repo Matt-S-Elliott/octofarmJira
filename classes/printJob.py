@@ -141,7 +141,8 @@ class PrintJob(db.Entity):
         text = "Print was started at: " + startTime + "\n"
         text += "Estimated print weight: " + str(self.weight) + "g\n"
         text += "Estimated print time: " + str(datetime.timedelta(seconds=self.print_time)) + "\n"
-        text += "Estimated print cost: " + "${:,.2f}".format(self.cost)
+        text += "Estimated print cost: " + "${:,.2f}".format(self.cost) + "\n"
+        text += "Print started on: " + self.printed_on.name
         return text
 
     @db_session
